@@ -15,7 +15,7 @@ try:
     with open(API_KEY_FILE, 'r') as f:
         api_key = f.read().strip()
 except FileNotFoundError:
-    print(f"錯誤：找不到 API Key 檔案 {API_KEY_FILE}")
+    print(f"錯誤: 找不到 API Key 檔案 {API_KEY_FILE}")
     exit()
 
 # 讀取股票代碼及公司名稱
@@ -24,10 +24,10 @@ try:
     ticker_to_security = pd.Series(df['Security'].values, index=df['Symbol']).to_dict()
     tickers = df['Symbol'].tolist()
 except FileNotFoundError:
-    print(f"錯誤：找不到輸入檔案 {INPUT_FILE}")
+    print(f"錯誤: 找不到輸入檔案 {INPUT_FILE}")
     exit()
 except KeyError as e:
-    print(f"錯誤：CSV 檔案缺少必要的欄位 {e}，請檢查 {INPUT_FILE} 檔案")
+    print(f"錯誤: CSV 檔案缺少必要的欄位 {e}，請檢查 {INPUT_FILE} 檔案")
     exit()
 
 
@@ -79,7 +79,7 @@ for ticker in tickers:
 
     # 檢查 API 限制
     if "Note" in data:
-        print("[停止] 已達 API 限制，請稍後重試。")
+        print("[停止] 已達 API 限制，請稍後重試")
         break
     
     # 處理數據並存檔
