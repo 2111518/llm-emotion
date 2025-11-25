@@ -12,5 +12,6 @@ wheels/
 .DS_Store
 *api*.txt
 *chat*.txt
+*diff*.txt
 *data*.csv
 *.json

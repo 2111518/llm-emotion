@@ -54,7 +54,7 @@ for ticker in tickers:
             print(f"跳過 {ticker} (已存在)")
             continue"""
 
-    print(f"抓取 {ticker} ({security_name})", end = " ")
+    # print(f"抓取 {ticker} ({security_name})", end = " ")
 
     # 發送請求
     url = "https://www.alphavantage.co/query"
@@ -68,7 +68,7 @@ for ticker in tickers:
     }
 
     try:
-        response = requests.get(url, params = mparams, timeout=30)
+        response = requests.get(url, params = mparams, timeout = 3)
         data = response.json()
     except requests.exceptions.RequestException as e:
         print(f"網絡錯誤: {e}")
@@ -97,9 +97,9 @@ for ticker in tickers:
                 'Label': item.get('overall_sentiment_label'),
                 'URL': item.get('url')
             })
-        print(f"取得 {len(news_list)} 則新聞")
+        # print(f"取得 {len(news_list)} 則新聞")
     else:
-        print("無相關新聞")
+        # print("無相關新聞")
         # 即使沒新聞也要記錄一筆空的，避免下次重複抓取
         news_list.append({'Ticker': ticker, 'Security': security_name, 'Title': 'NO_DATA'})
 
@@ -112,5 +112,7 @@ for ticker in tickers:
         print(f"寫入 CSV 檔案時發生錯誤: {e}")
         
     # 遵守每分鐘 5 次的限制
-    time.sleep(15)
+    time.sleep(12)
+
+print("finish")
 

@@ -50,14 +50,14 @@ if __name__ == "__main__":
                 
                 # 2. 格式化資料為純文字上下文
                 # 為了節省 Token，我們只選取幾個重要欄位並轉換成字串
-                df_context = df[['Ticker', 'Title', 'Score', 'Label']].head(50) # 限制行數以避免 Token 超限
+                df_context = df[['Ticker', 'Title', 'Score', 'Label']]# .head(50) # 限制行數以避免 Token 超限
                 
                 # 將 DataFrame 轉換為 Markdown Table 或簡單的文字格式
                 context_data = df_context.to_string(index=False)
                 
                 # 3. 組合 Prompt
                 combined_prompt = (
-                    f"請參考以下提供的股票市場情感資料 (Stock Sentiment Data) 回答問題。資料中的欄位分別為 Ticker, Title, Score, Label\n\n"
+                    f"請參考以下提供的股票市場情感資料 (Stock Sentiment Data) 回答。資料中的欄位分別為 Ticker, Title, Score, Label\n\n"
                     f"資料開始\n"
                     f"{context_data}\n"
                     f"資料結束\n"
@@ -66,7 +66,7 @@ if __name__ == "__main__":
                 # print(f"檢測到 'news' 指令，已讀取 {len(df)} 筆資料（限制前 50 筆）作為上下文。")
 
             except FileNotFoundError:
-                reply = f"錯誤：找不到新聞資料檔案 {CSV_FILE}，請確認檔案路徑"
+                reply = f"錯誤: 找不到新聞資料檔案 {CSV_FILE}，請確認檔案路徑"
                 combined_prompt = None
             except Exception as e:
                 reply = f"讀取資料檔案時發生錯誤: {str(e)}"
