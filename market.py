@@ -63,7 +63,7 @@ for ticker in tickers:
         "tickers": ticker,
         "time_from": time_from,
         "time_to": time_to,
-        "limit": 50,
+        "limit": 100,
         "apikey": api_key
     }
 
