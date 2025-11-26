@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 import google.generativeai as genai
 import pandas as pd
-import time # 引入 time 模組用於 backoff
+import time
 
 # 參數設定區
 API_KEY_FILE = "api-key.txt"
@@ -27,8 +27,8 @@ start_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
 history_filename = f"chat_history_{start_time}.txt"
 
 # 函數：處理與 Gemini 的對話，帶有重試機制 (Exponential Backoff)
-def chat_with_gemini(user_input, max_retries=5):
-    """將文字輸入發送給 Gemini API，並處理潛在的 API 錯誤與重試。"""
+def chat_with_gemini(user_input, max_retries = 3):
+    """將文字輸入發送給 Gemini API，並處理潛在的 API 錯誤與重試"""
     prompt = user_input
     retry_delay = 1
     
@@ -39,7 +39,7 @@ def chat_with_gemini(user_input, max_retries=5):
             return response.text
         except Exception as e:
             if attempt < max_retries - 1:
-                print(f"API 錯誤 (嘗試 {attempt + 1}/{max_retries})，等待 {retry_delay} 秒後重試: {e}")
+                print(f"API 錯誤 (嘗試 {attempt + 1}/{max_retries})，{retry_delay} 秒後重試: {e}")
                 time.sleep(retry_delay)
                 retry_delay *= 2  # 指數退避
             else:
@@ -70,7 +70,7 @@ if __name__ == "__main__":
 
                 itime, user_prompt = parts
                 
-                # --- 1. 處理 Sentiment Data (情感資料) ---
+                # 1. 處理 Sentiment Data (情感資料)
                 df_sentiment = pd.read_csv(CSV_FILE[0])
                 
                 # 目標日期轉換：YYYY-MM-DD (例如 2024-11-25) -> YYYYMMDD (例如 20241125)
@@ -91,7 +91,7 @@ if __name__ == "__main__":
                     sentiment_data = "沒有資料"# f"警告: 在 {itime} 找不到任何市場情感資料 (請確認 Time 欄位格式是否為 YYYYmmddTHHmmss)。"
                     # print(f"警告: 在 {itime} 找不到任何市場情感資料。")
 
-                # --- 2. 處理 Stock Data (股票收盤價資料) ---
+                # 2. 處理 Stock Data (股票收盤價資料)
                 df_stock = pd.read_csv(CSV_FILE[1])
 
                 # 過濾 Stock Data by Date (Date 欄位格式為 YYYY-MM-DD)
@@ -109,7 +109,7 @@ if __name__ == "__main__":
                     # print(f"警告: 在 {itime} 找不到任何股票收盤價資料。")
 
 
-                # --- 3. 組合 Prompt ---
+                # 3. 組合 Prompt
                 combined_prompt = (
                     f"請參考以下提供的市場情感資料 (Stock Sentiment Data) 和指定日期的股票收盤價資料 (Stock Closing Price Data) 來回答問題\n"
                     f"市場情感資料已過濾為指定日期: {itime}\n"
@@ -117,7 +117,7 @@ if __name__ == "__main__":
                     f"市場情感資料 (Sentiment Data) - 欄位: Security, Title, Score, Label\n"
                     f"{sentiment_data}\n"
                     
-                    f"指定日期 ({itime}) 的股票收盤價資料 (Stock Price Data) - 欄位: Ticker, Company Name, Date, Close\n"
+                    f"{itime} 的股票收盤價資料 (Stock Price Data) - 欄位: Ticker, Company Name, Date, Close\n"
                     f"{stock_data}\n"
                     
                     f"問題: {user_prompt}"

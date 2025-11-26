@@ -10,7 +10,6 @@ API_KEY_FILE = "alpha-api.txt"
 local = time.strftime("%Y%m%d-%H%M", time.localtime(time.time()))
 out_file = OUTPUT_FILE + local +".csv"
 
-# 讀取 API Key
 try:
     with open(API_KEY_FILE, 'r') as f:
         api_key = f.read().strip()
@@ -18,7 +17,6 @@ except FileNotFoundError:
     print(f"錯誤: 找不到 API Key 檔案 {API_KEY_FILE}")
     exit()
 
-# 讀取股票代碼及公司名稱
 try:
     df = pd.read_csv(INPUT_FILE)
     ticker_to_security = pd.Series(df['Security'].values, index=df['Symbol']).to_dict()
@@ -36,7 +34,7 @@ print("請輸入日期 (格式: YYYY-MM-DD)")
 start_input = input("開始日期: ").strip()
 end_input = input("結束日期: ").strip()
 
-# 轉換成 API 需要的格式 (20230101T0000)
+# 轉換成 API 需要的格式
 time_from = start_input.replace("-", "") + "T0000"
 time_to = end_input.replace("-", "") + "T2359"
 
@@ -83,7 +81,7 @@ for ticker in tickers:
         break
     
     # 處理數據並存檔
-    feed = data.get('feed', [])
+    feed = data.get("feed", [])
     news_list = []
     
     if feed:
@@ -100,18 +98,18 @@ for ticker in tickers:
         # print(f"取得 {len(news_list)} 則新聞")
     else:
         # print("無相關新聞")
-        # 即使沒新聞也要記錄一筆空的，避免下次重複抓取
+        # 即使沒新聞也要記錄一筆空的，避免重複抓取
         news_list.append({'Ticker': ticker, 'Security': security_name, 'Title': 'NO_DATA'})
 
     # 寫入 CSV (如果檔案不存在就寫入標頭，存在就附加)
     save_df = pd.DataFrame(news_list)
     header = not os.path.exists(out_file)
     try:
-        save_df.to_csv(out_file, mode='a', header = header, index = False, encoding='utf-8')
+        save_df.to_csv(out_file, mode = "a", header = header, index = False, encoding = "utf-8")
     except Exception as e:
         print(f"寫入 CSV 檔案時發生錯誤: {e}")
         
-    # 遵守每分鐘 5 次的限制
+    # 每分鐘 5 次的限制
     time.sleep(12)
 
 print("finish")

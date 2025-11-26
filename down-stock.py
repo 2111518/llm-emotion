@@ -5,8 +5,7 @@ from datetime import datetime
 
 def get_tickers_info_from_file(filepath: Path) -> list[tuple[str, str]]:
     """
-    從 CSV 檔案讀取股票代碼和公司名稱資訊。
-    CSV 檔案必須包含 'Symbol' 和 'Security' 欄位。
+    從 CSV 檔案讀取股票代碼和公司名稱資訊。CSV 檔案必須包含 'Symbol' 和 'Security' 欄位。
     """
     if not filepath.exists():
         print(f"X 檔案 '{filepath}' 找不到，請確認檔案是否存在。")
@@ -81,6 +80,11 @@ def main():
     # 函數回傳值的型別已改變
     tickers_info = get_tickers_info_from_file(filepath)
     filename_str = str(filepath).split(".")[0]
+    filename = ""
+    for i in range(len(filename_str)):
+        if i == 0 or filename_str[i].isupper() or filename_str[i - 1] == "-":
+            filename = filename + filename_str[i]
+
     if not tickers_info:
         return
 
@@ -91,7 +95,7 @@ def main():
     df = fetch_prices_by_range(tickers_info, start_date, end_date)
 
     if not df.empty:
-        output_file = f"{filename_str}_{start_date}_{end_date}.csv"
+        output_file = f"{filename}_{start_date}_{end_date}.csv"
         df.to_csv(output_file, index=False)
         print(f"-> 資料已儲存到 {output_file}")
 

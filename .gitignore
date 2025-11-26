@@ -15,4 +15,5 @@ wheels/
 *diff*.txt
 *data*.csv
 *stock*.csv
+*_*.csv
 *.json
