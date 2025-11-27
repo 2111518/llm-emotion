@@ -75,16 +75,16 @@ if __name__ == "__main__":
                 
                 # 目標日期轉換：YYYY-MM-DD (例如 2024-11-25) -> YYYYMMDD (例如 20241125)
                 # 這是為了與 sentiment-data.csv 中的 Time 欄位 (YYYYmmddTHHmmss) 的前 8 碼進行比對
-                target_date_sentiment = itime.replace('-', '')
+                target_date_sentiment = itime.replace("-", "")
                 
                 # 過濾 Sentiment Data by Date (Time 欄位格式為 YYYYmmddTHHmmss)
                 # 提取 Time 欄位的前 8 碼作為日期
-                df_sentiment['Date_Only'] = df_sentiment['Time'].astype(str).str[:8]
-                df_sentiment_filtered = df_sentiment[df_sentiment['Date_Only'] == target_date_sentiment]
+                df_sentiment["Date_Only"] = df_sentiment["Time"].astype(str).str[:8]
+                df_sentiment_filtered = df_sentiment[df_sentiment["Date_Only"] == target_date_sentiment]
 
                 # 選取重要欄位
                 if not df_sentiment_filtered.empty:
-                    df_sentiment_context = df_sentiment_filtered[['Security', 'Title', 'Score', 'Label']]
+                    df_sentiment_context = df_sentiment_filtered[["Security", "Title", "Score", "Label"]]
                     sentiment_data = df_sentiment_context.to_string(index=False)
                     # print(f"已成功讀取並過濾 {len(df_sentiment_filtered)} 筆 {itime} 的市場情感資料。")
                 else:
@@ -95,14 +95,14 @@ if __name__ == "__main__":
                 df_stock = pd.read_csv(CSV_FILE[1])
 
                 # 過濾 Stock Data by Date (Date 欄位格式為 YYYY-MM-DD)
-                df_stock['Date'] = df_stock['Date'].astype(str)
-                df_stock_filtered = df_stock[df_stock['Date'] == itime]
-                
+                df_stock["Date"] = df_stock["Date"].astype(str)
+                df_stock_filtered = df_stock[df_stock["Date"] == itime]
+
                 # 格式化 Filtered Stock Data
                 if not df_stock_filtered.empty:
                     # 選取需要的欄位：股票代號, 公司名稱, 日期, 收盤價
-                    df_stock_context = df_stock_filtered[['Ticker', 'Company Name', 'Date', 'Close']]
-                    stock_data = df_stock_context.to_string(index=False)
+                    df_stock_context = df_stock_filtered[["Ticker", "Company Name", "Date", "Close"]]
+                    stock_data = df_stock_context.to_string(index = False)
                     # print(f"已成功讀取 {len(df_stock_filtered)} 筆 {itime} 的股票收盤價資料。")
                 else:
                     stock_data = "沒有資料"# f"警告: 在 {itime} 找不到任何股票收盤價資料 (請確認 Date 欄位格式是否為 YYYY-MM-DD)。"
@@ -111,13 +111,13 @@ if __name__ == "__main__":
 
                 # 3. 組合 Prompt
                 combined_prompt = (
-                    f"請參考以下提供的市場情感資料 (Stock Sentiment Data) 和指定日期的股票收盤價資料 (Stock Closing Price Data) 來回答問題\n"
-                    f"市場情感資料已過濾為指定日期: {itime}\n"
+                    f"請參考以下提供的市場情感資料 (Stock Sentiment Data) 和股票收盤價資料 (Stock Closing Price Data) 來回答問題\n"
+                    f"資料的日期: {itime}\n"
                     
-                    f"市場情感資料 (Sentiment Data) - 欄位: Security, Title, Score, Label\n"
+                    f"市場情感資料(Sentiment Data) - 欄位: Security, Title, Score, Label\n"
                     f"{sentiment_data}\n"
                     
-                    f"{itime} 的股票收盤價資料 (Stock Price Data) - 欄位: Ticker, Company Name, Date, Close\n"
+                    f"{itime} 的股票收盤價資料(Stock Price Data) - 欄位: Ticker, Company Name, Date, Close\n"
                     f"{stock_data}\n"
                     
                     f"問題: {user_prompt}"

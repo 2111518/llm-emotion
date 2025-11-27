@@ -4,11 +4,9 @@ from pathlib import Path
 from datetime import datetime
 
 def get_tickers_info_from_file(filepath: Path) -> list[tuple[str, str]]:
-    """
-    從 CSV 檔案讀取股票代碼和公司名稱資訊。CSV 檔案必須包含 'Symbol' 和 'Security' 欄位。
-    """
+    # 從 CSV 檔案讀取股票代碼和公司名稱資訊。CSV 檔案必須包含 'Symbol' 和 'Security' 欄位。
     if not filepath.exists():
-        print(f"X 檔案 '{filepath}' 找不到，請確認檔案是否存在。")
+        print(f"X 檔案 '{filepath}' 找不到，請確認檔案是否存在")
         return []
 
     try:
@@ -34,9 +32,7 @@ def get_tickers_info_from_file(filepath: Path) -> list[tuple[str, str]]:
     return sorted(tickers_info, key=lambda x: x[0])
 
 def fetch_prices_by_range(tickers_info: list[tuple[str, str]], start_date: str, end_date: str) -> pd.DataFrame:
-    """
-    根據股票代碼列表和日期區間，從 yfinance 取得收盤價資料。
-    """
+    # 根據股票代碼列表和日期區間，從 yfinance 取得收盤價資料。
     try:
         start_obj = datetime.strptime(start_date, "%Y-%m-%d")
         end_obj = datetime.strptime(end_date, "%Y-%m-%d")

@@ -13,7 +13,7 @@ wheels/
 *api*.txt
 *chat*.txt
 *diff*.txt
-*data*.csv
+*sentiment*.csv
 *stock*.csv
 *_*.csv
 *.json
